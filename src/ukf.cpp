@@ -69,6 +69,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   Complete this function! Make sure you switch between lidar and radar
   measurements.
   */
+ long long previous_time_stamp;
  if (!is_initialized_) {
    x_ << 0,0,0,0,0;
    P_ << 0,0,0,0,0,
@@ -85,7 +86,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
     }
 
     //update the previous time stamp
-    long long previous_time_stamp = meas_package.timestamp_;
+    previous_time_stamp = meas_package.timestamp_;
 
     //done initializing, no need to predict or update
     is_initialized_ = true;
