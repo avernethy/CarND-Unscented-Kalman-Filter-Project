@@ -130,8 +130,8 @@ void UKF::Prediction(double delta_t) {
   //set remaining sigma points
   for (int i = 0; i < n_x; i++)
   {
-    Xsig.col(i+1)     = x + sqrt(lambda+n_x) * A.col(i);
-    Xsig.col(i+1+n_x) = x - sqrt(lambda+n_x) * A.col(i);
+    Xsig.col(i+1)     = x_ + sqrt(lambda+n_x) * A.col(i);
+    Xsig.col(i+1+n_x) = x_ - sqrt(lambda+n_x) * A.col(i);
   }
 
   //create augmented mean vector
@@ -150,7 +150,7 @@ void UKF::Prediction(double delta_t) {
 
   //create augmented covariance matrix
   P_aug.fill(0.0);
-  P_aug.topLeftCorner(n_x, n_x) = P;
+  P_aug.topLeftCorner(n_x, n_x) = P_;
   P_aug(5,5) = std_a_ * std_a_;
   P_aug(6,6) = std_yawdd_ * std_yawdd_;
 
