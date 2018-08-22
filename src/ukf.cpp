@@ -25,10 +25,10 @@ UKF::UKF() {
   P_ = MatrixXd(5, 5);
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 30;
+  std_a_ = 30; // <- MODIFY THIS
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  std_yawdd_ = 30;
+  std_yawdd_ = 30; // <- MODIFY THIS
   
   //DO NOT MODIFY measurement noise values below these are provided by the sensor manufacturer.
   // Laser measurement noise standard deviation position1 in m
@@ -108,6 +108,109 @@ void UKF::Prediction(double delta_t) {
   Complete this function! Estimate the object's location. Modify the state
   vector, x_. Predict sigma points, the state, and the state covariance matrix.
   */
+
+  cout << delta_t << endl;
+  //set state dimension
+  int n_x = 5;
+
+  //set augmented dimension
+  int n_aug = 7;
+
+  //define spreading parameter
+  double lambda = 3 - n_x;
+
+  MatrixXd Xsig = MatrixXd(n_x, 2 * n_x + 1);
+
+  //calculate square root of P
+  MatrixXd A = P.llt().matrixL();
+
+  //set first colume of sigma point matrix
+  Xsig.col(0)  = x;
+
+  //set remaining sigma points
+  for (int i = 0; i < n_x; i++)
+  {
+    Xsig.col(i+1)     = x + sqrt(lambda+n_x) * A.col(i);
+    Xsig.col(i+1+n_x) = x - sqrt(lambda+n_x) * A.col(i);
+  }
+
+  //create augmented mean vector
+  VectorXd x_aug = VectorXd(7);
+
+  //create augmented state covariance
+  MatrixXd P_aug = MatrixXd(7, 7);
+
+  //create sigma point matrix
+  MatrixXd Xsig_aug = MatrixXd(n_aug, 2 * n_aug + 1);
+
+  //create augmented mean state
+  x_aug.head(n_x) = x;
+  x_aug(5) = 0;
+  x_aug(6) = 0;
+
+  //create augmented covariance matrix
+  P_aug.fill(0.0);
+  P_aug.topLeftCorner(n_x, n_x) = P;
+  P_aug(5,5) = std_a * std_a;
+  P_aug(6,6) = std_yawdd * std_yawdd;
+
+  //create square root matrix
+  MatrixXd A = P_aug.llt().matrixL();
+
+  //create augmented sigma points
+  float scale_factor = sqrt(lambda + n_aug);
+  Xsig_aug.col(0) = x_aug;
+  
+  for (int ii = 0; ii < n_aug; ii++){
+      Xsig_aug.col(ii + 1) = x_aug + scale_factor * A.col(ii);
+      Xsig_aug.col(ii + 1 + n_aug) = x_aug - scale_factor * A.col(ii);
+  }
+
+  MatrixXd Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);
+  
+  
+  //predict sigma points
+  //avoid division by zero
+  for (int ii = 0; ii < 2 * n_aug + 1; ii++){
+      float px = Xsig_aug(0, ii);
+      float py = Xsig_aug(1, ii);
+      float v = Xsig_aug(2, ii);
+      float psi = Xsig_aug(3, ii);
+      float psi_dot = Xsig_aug(4, ii);
+      float nu_a = Xsig_aug(5, ii);
+      float nu_psi2 = Xsig_aug(6, ii);
+      VectorXd x = VectorXd(5);
+      x << px, py, v, psi, psi_dot;
+      
+      VectorXd term1 = VectorXd(5);
+      VectorXd term2 = VectorXd(5);
+      if(psi_dot != 0){
+          float k_vs = v/psi_dot;
+          float inside = psi + psi_dot * delta_t;
+          term1(0) = k_vs * (sin(inside) - sin(psi));
+          term1(1) = k_vs * (-cos(inside) + cos(psi));
+          term1(2) = 0;
+          term1(3) = psi_dot * delta_t;
+          term1(4) = 0;
+      }
+      else{
+          term1(0) = v * cos(psi) * delta_t;
+          term1(1) = v * sin(psi) * delta_t;
+          term1(2) = 0;
+          term1(3) = 0;
+          term1(4) = 0;
+      }
+      
+      float dt2 = 0.5 * delta_t * delta_t;
+      term2(0) = dt2 * cos(psi) * nu_a;
+      term2(1) = dt2 * sin(psi) * nu_a;
+      term2(2) = delta_t * nu_a;
+      term2(3) = dt2 * nu_psi2;
+      term2(4) = delta_t * nu_psi2;
+      
+      Xsig_pred.col(ii) = x + term1 + term2;
+       
+  }
 }
 
 /**
