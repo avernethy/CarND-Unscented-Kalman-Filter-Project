@@ -122,10 +122,10 @@ void UKF::Prediction(double delta_t) {
   MatrixXd Xsig = MatrixXd(n_x, 2 * n_x + 1);
 
   //calculate square root of P
-  MatrixXd A = P.llt().matrixL();
+  MatrixXd A = P_.llt().matrixL();
 
   //set first colume of sigma point matrix
-  Xsig.col(0)  = x;
+  Xsig.col(0)  = x_;
 
   //set remaining sigma points
   for (int i = 0; i < n_x; i++)
@@ -144,20 +144,17 @@ void UKF::Prediction(double delta_t) {
   MatrixXd Xsig_aug = MatrixXd(n_aug, 2 * n_aug + 1);
 
   //create augmented mean state
-  x_aug.head(n_x) = x;
+  x_aug.head(n_x) = x_;
   x_aug(5) = 0;
   x_aug(6) = 0;
 
   //create augmented covariance matrix
   P_aug.fill(0.0);
   P_aug.topLeftCorner(n_x, n_x) = P;
-  P_aug(5,5) = std_a * std_a;
-  P_aug(6,6) = std_yawdd * std_yawdd;
+  P_aug(5,5) = std_a_ * std_a_;
+  P_aug(6,6) = std_yawdd_ * std_yawdd_;
 
-  //create square root matrix
-  MatrixXd A = P_aug.llt().matrixL();
-
-  //create augmented sigma points
+    //create augmented sigma points
   float scale_factor = sqrt(lambda + n_aug);
   Xsig_aug.col(0) = x_aug;
   
