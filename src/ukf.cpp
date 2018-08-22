@@ -94,6 +94,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
  }
 
  double delta_t = (meas_package.timestamp_ - previous_time_stamp)/1000000.0;
+ ukf.Prediction(delta_t);
 }
 
 /**
