@@ -69,7 +69,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   Complete this function! Make sure you switch between lidar and radar
   measurements.
   */
- long long previous_time_stamp;
+ static long long previous_time_stamp;
  double delta_t;
  if (!is_initialized_) {
    
