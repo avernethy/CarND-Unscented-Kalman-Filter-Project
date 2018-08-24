@@ -69,10 +69,10 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   Complete this function! Make sure you switch between lidar and radar
   measurements.
   */
- 
+ long long previous_time_stamp;
+ double delta_t;
  if (!is_initialized_) {
-   long long previous_time_stamp = 0;
-   double delta_t = 0;
+   
    cout << "Initilizing" << endl;
    x_ << 0,0,0,0,0;
    P_ << 0,0,0,0,0,
