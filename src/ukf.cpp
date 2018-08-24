@@ -100,6 +100,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
  delta_t = (meas_package.timestamp_ - previous_time_stamp)/1000000.0;
  cout << "Delta t: " << delta_t << endl;
  previous_time_stamp = meas_package.timestamp_;
+ cout << "Previous t: " << previous_time_stamp << endl;
  UKF::Prediction(delta_t);
 }
 
@@ -116,7 +117,7 @@ void UKF::Prediction(double delta_t) {
   vector, x_. Predict sigma points, the state, and the state covariance matrix.
   */
 
-  cout << delta_t << endl;
+  cout << "IN Predict" << endl;
   /*
   //set state dimension
   int n_x = 5;
