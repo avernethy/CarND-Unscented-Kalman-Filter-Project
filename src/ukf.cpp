@@ -168,10 +168,12 @@ void UKF::Prediction(double delta_t) {
     //create augmented sigma points
   float scale_factor = sqrt(lambda + n_aug);
   Xsig_aug.col(0) = x_aug;
+
+  MatrixXd A_aug = P_aug.llt().matrixL();
   
   for (int ii = 0; ii < n_aug; ii++){
-      Xsig_aug.col(ii + 1) = x_aug + scale_factor * A.col(ii);
-      Xsig_aug.col(ii + 1 + n_aug) = x_aug - scale_factor * A.col(ii);
+      Xsig_aug.col(ii + 1) = x_aug + scale_factor * A_aug.col(ii);
+      Xsig_aug.col(ii + 1 + n_aug) = x_aug - scale_factor * A_aug.col(ii);
   }
 
  Xsig_pred_ = MatrixXd(n_x, 2 * n_aug + 1);
