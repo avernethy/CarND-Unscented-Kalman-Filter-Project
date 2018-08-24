@@ -94,7 +94,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
  }
 
  double delta_t = (meas_package.timestamp_ - previous_time_stamp)/1000000.0;
- UKF::Prediction(delta_t);
+ Xsig_pred_ = UKF.Prediction(delta_t);
 }
 
 /**
@@ -164,7 +164,7 @@ void UKF::Prediction(double delta_t) {
       Xsig_aug.col(ii + 1 + n_aug) = x_aug - scale_factor * A.col(ii);
   }
 
-  MatrixXd Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);
+  Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);
   
   
   //predict sigma points
@@ -207,6 +207,8 @@ void UKF::Prediction(double delta_t) {
       term2(4) = delta_t * nu_psi2;
       
       Xsig_pred.col(ii) = x + term1 + term2;
+
+      return Xsig_pred;
        
   }
 }
