@@ -164,7 +164,7 @@ void UKF::Prediction(double delta_t) {
       Xsig_aug.col(ii + 1 + n_aug) = x_aug - scale_factor * A.col(ii);
   }
 
-  Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);
+  MatrixXd Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);
   
   
   //predict sigma points
