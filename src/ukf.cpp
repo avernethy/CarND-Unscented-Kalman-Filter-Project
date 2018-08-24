@@ -164,7 +164,7 @@ void UKF::Prediction(double delta_t) {
   P_aug(5,5) = std_a_ * std_a_;
   P_aug(6,6) = std_yawdd_ * std_yawdd_;
   cout << P_aug << "\n" << endl;
-/*
+
     //create augmented sigma points
   float scale_factor = sqrt(lambda + n_aug);
   Xsig_aug.col(0) = x_aug;
@@ -176,7 +176,7 @@ void UKF::Prediction(double delta_t) {
 
  Xsig_pred_ = MatrixXd(n_x, 2 * n_aug + 1);
   
-  
+  /*
   //predict sigma points
   //avoid division by zero
   for (int ii = 0; ii < 2 * n_aug + 1; ii++){
