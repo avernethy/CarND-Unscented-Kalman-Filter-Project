@@ -111,6 +111,7 @@ void UKF::Prediction(double delta_t) {
   */
 
   cout << delta_t << endl;
+  /*
   //set state dimension
   int n_x = 5;
 
@@ -207,7 +208,7 @@ void UKF::Prediction(double delta_t) {
       term2(4) = delta_t * nu_psi2;
       
       Xsig_pred_.col(ii) = x + term1 + term2;
-       
+       */
   }
 }
 
