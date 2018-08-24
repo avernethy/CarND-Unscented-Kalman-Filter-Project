@@ -71,6 +71,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   */
  long long previous_time_stamp;
  if (!is_initialized_) {
+   cout << "Initilizing" << endl;
    x_ << 0,0,0,0,0;
    P_ << 0,0,0,0,0,
         0,0,0,0,0,
