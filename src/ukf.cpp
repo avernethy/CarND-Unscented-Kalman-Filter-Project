@@ -132,7 +132,7 @@ void UKF::Prediction(double delta_t) {
 
   //calculate square root of P
   MatrixXd A = P_.llt().matrixL();
-  /*
+  
   //set first colume of sigma point matrix
   Xsig.col(0)  = x_;
 
@@ -142,7 +142,8 @@ void UKF::Prediction(double delta_t) {
     Xsig.col(i+1)     = x_ + sqrt(lambda+n_x) * A.col(i);
     Xsig.col(i+1+n_x) = x_ - sqrt(lambda+n_x) * A.col(i);
   }
-
+  cout << Xsig << "\n" << endl;
+/*
   //create augmented mean vector
   VectorXd x_aug = VectorXd(7);
 
