@@ -98,9 +98,9 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
  }
 
  delta_t = (meas_package.timestamp_ - previous_time_stamp)/1000000.0;
- cout << "Delta t: " << delta_t << endl;
+ //cout << "Delta t: " << delta_t << endl;
  previous_time_stamp = meas_package.timestamp_;
- cout << "Previous t: " << previous_time_stamp << endl;
+ //cout << "Previous t: " << previous_time_stamp << endl;
  UKF::Prediction(delta_t);
 }
 
@@ -118,7 +118,7 @@ void UKF::Prediction(double delta_t) {
   */
 
   cout << "IN Predict" << endl;
-  /*
+  
   //set state dimension
   int n_x = 5;
 
@@ -132,7 +132,7 @@ void UKF::Prediction(double delta_t) {
 
   //calculate square root of P
   MatrixXd A = P_.llt().matrixL();
-
+  /*
   //set first colume of sigma point matrix
   Xsig.col(0)  = x_;
 
