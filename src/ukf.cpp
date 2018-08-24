@@ -207,8 +207,6 @@ void UKF::Prediction(double delta_t) {
       term2(4) = delta_t * nu_psi2;
       
       Xsig_pred_.col(ii) = x + term1 + term2;
-
-      return Xsig_pred;
        
   }
 }
