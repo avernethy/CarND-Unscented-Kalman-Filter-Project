@@ -102,8 +102,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
     0;
     }
     else if (meas_package.sensor_type_ == MeasurementPackage::RADAR){
-      x_ << meas_package.raw_measurements_[0]*cos(meas_package.raw_measurements_[3]),
-                meas_package.raw_measurements_[0]*sin(meas_package.raw_measurements_[3]),
+      x_ << 0,
+                0,
                 0,
                 0,
                 0;
@@ -129,7 +129,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
  
  //cout << "weights_ top: " << weights_ << endl;
 
- if (meas_package.sensor_type_ == MeasurementPackage::LASER){
+ /*if (meas_package.sensor_type_ == MeasurementPackage::LASER){
       cout << "In Lidar" << endl;
       use_laser_ = true;
       use_radar_ = false;
@@ -140,8 +140,9 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
       use_laser_ = false;
       use_radar_ = true;
       UKF::UpdateRadar(meas_package);
- }
+ }*/
 cout << "Exit: " << endl;
+cout << "P: " << P_ << endl;
 }
 
 /**
