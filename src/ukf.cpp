@@ -125,7 +125,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 
  cout << "Lambda: " << lambda_ << endl;
  //set vector for weights
- VectorXd weights_ = VectorXd(2 * n_aug_ + 1);
+ weights_ = VectorXd(2 * n_aug_ + 1);
  double weight_0 = lambda_/(lambda_ + n_aug_);
  weights_(0) = weight_0;
  for (int i=1; i<2*n_aug_ + 1; i++) {  
