@@ -79,11 +79,11 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
      2.20528,
     0.536853,
     0.353577;
-   P_ << 0.0054342,  -0.002405,  0.0034157, -0.0034819, -0.00299378,
-  -0.002405,    0.01084,   0.001492,  0.0098018,  0.00791091,
-  0.0034157,   0.001492,  0.0058012, 0.00077863, 0.000792973,
- -0.0034819,  0.0098018, 0.00077863,   0.011923,   0.0112491,
- -0.0029937,  0.0079109, 0.00079297,   0.011249,   0.0126972;
+   P_ << 1, 0, 0, 0, 0, 
+        0, 1, 0, 0, 0, 
+        0, 0, 1, 0, 0,
+        0, 0, 0, 1, 0,
+        0, 0, 0, 0, 1;
 
     if (meas_package.sensor_type_ == MeasurementPackage::LASER){
       x_ << 5.93637,
@@ -344,7 +344,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
           0, 0,std_radrd_*std_radrd_;
   
   S = S + R;
-  cout << "S: " << S << endl;
+  //cout << "S: " << S << endl;
   //create matrix for cross correlation Tc
   MatrixXd Tc = MatrixXd(n_x, n_z);
 
@@ -354,6 +354,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
     //residual
     VectorXd z_diff = Zsig.col(i) - z_pred;
+cout << "Entering the while loops" << endl;
     //angle normalization
     while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
     while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
@@ -363,7 +364,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
     //angle normalization
     while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
     while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
-
+cout << "Made it past the while loops" << endl;
     Tc = Tc + weights(i) * x_diff * z_diff.transpose();
   }
 
