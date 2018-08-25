@@ -287,6 +287,8 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   */
   //set measurement dimension, radar can measure r, phi, and r_dot
   
+  //set vector for weights
+  VectorXd weights = VectorXd(2*n_aug+1);
   // set weights
   double weight_0 = lambda_/(lambda_+n_aug_);
   weights(0) = weight_0;
