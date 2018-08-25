@@ -291,6 +291,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
  
     //create matrix for sigma points in measurement space
   MatrixXd Zsig = MatrixXd(n_z, 2 * n_aug_ + 1);
+  cout << "test1" << endl;
 
   //transform sigma points into measurement space
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //2n+1 simga points
@@ -310,12 +311,16 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
     Zsig(2,i) = (p_x*v1 + p_y*v2 ) / sqrt(p_x*p_x + p_y*p_y);   //r_dot
   }
 
+  cout << "test2" << endl;
+
   //mean predicted measurement
   VectorXd z_pred = VectorXd(n_z);
   z_pred.fill(0.0);
   for (int i=0; i < 2*n_aug_+1; i++) {
       z_pred = z_pred + weights_(i) * Zsig.col(i);
   }
+
+  cout << "test3" << endl;
 
   //innovation covariance matrix S
   MatrixXd S = MatrixXd(n_z,n_z);
@@ -330,7 +335,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
     S = S + weights_(i) * z_diff * z_diff.transpose();
   }
-
+  cout << "test4" << endl;
   //add measurement noise covariance matrix
   MatrixXd R = MatrixXd(n_z,n_z);
   R <<    std_radr_*std_radr_, 0, 0,
@@ -338,6 +343,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
           0, 0,std_radrd_*std_radrd_;
   
   S = S + R;
+  cout << "test5" << endl;
   //cout << "S: " << S << endl;
   //create matrix for cross correlation Tc
   MatrixXd Tc = MatrixXd(n_x_, n_z);
@@ -348,7 +354,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
     //residual
     VectorXd z_diff = Zsig.col(i) - z_pred;
-cout << "Entering the while loops" << endl;
+    cout << "Entering the while loops" << endl;
     //angle normalization
     while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
     while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
@@ -358,7 +364,7 @@ cout << "Entering the while loops" << endl;
     //angle normalization
     while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
     while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
-cout << "Made it past the while loops" << endl;
+    cout << "Made it past the while loops" << endl;
     Tc = Tc + weights_(i) * x_diff * z_diff.transpose();
   }
 
