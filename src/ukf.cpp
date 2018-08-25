@@ -273,7 +273,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
   //define spreading parameter
   double lambda = 3 - n_aug;
-
+  cout << "Lambda: " << lambda << endl;
   //set vector for weights
   VectorXd weights = VectorXd(2*n_aug+1);
    double weight_0 = lambda/(lambda+n_aug);
@@ -297,7 +297,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
     double v1 = cos(yaw)*v;
     double v2 = sin(yaw)*v;
-
+    cout << "v2: " << v2 << endl;
     // measurement model
     Zsig(0,i) = sqrt(p_x*p_x + p_y*p_y);                        //r
     Zsig(1,i) = atan2(p_y,p_x);                                 //phi
@@ -332,7 +332,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
           0, 0,std_radrd_*std_radrd_;
   
   S = S + R;
-
+  cout << "S: " << S << endl;
   //create matrix for cross correlation Tc
   MatrixXd Tc = MatrixXd(n_x, n_z);
 
