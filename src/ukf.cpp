@@ -325,7 +325,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
       cout << "test loop" << endl;
       cout << "z_pred3: " << z_pred << endl;
       cout << "Zsig" << Zsig.col(i) << endl;
-      cout << "weights" << weights_ << endl;
+      cout << "weights" << weights_(i) << endl;
       z_pred = z_pred + weights_(i) * Zsig.col(i);
   }
 
