@@ -315,13 +315,16 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
   //mean predicted measurement
   VectorXd z_pred = VectorXd(n_z);
+  cout << "z_pred1: " << z_pred << endl;
   z_pred.fill(0.0);
+  cout << "z_pred2: " << z_pred << endl;
   cout << "test2a" << endl;
+  cout << "n_aug_" << n_aug_ << endl;
   for (int i=0; i < 2*n_aug_ + 1; i++) {
       cout << "test loop" << endl;
-      cout << "z_pred" << z_pred << endl;
-      cout << "weights_(i)" << weights_(i) << endl;
-      cout << "Zsig.col(i)" << Zsig.col(i) << endl;
+      cout << "z_pred3: " << z_pred << endl;
+      cout << "weights" << weights_(i) << endl;
+      cout << "Zsig" << Zsig.col(i) << endl;
       z_pred = z_pred + weights_(i) * Zsig.col(i);
   }
 
