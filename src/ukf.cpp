@@ -125,13 +125,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 
  cout << "Lambda: " << lambda_ << endl;
  //set vector for weights
- weights_ = VectorXd(2 * n_aug_ + 1);
- double weight_0 = lambda_/(lambda_ + n_aug_);
- weights_(0) = weight_0;
- for (int i=1; i<2*n_aug_ + 1; i++) {  
-  double weight = 0.5/(n_aug_+lambda_);
-  weights_(i) = weight;
- }
+ 
  cout << "weights_ top: " << weights_ << endl;
 
  if (meas_package.sensor_type_ == MeasurementPackage::LASER){
@@ -321,12 +315,21 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   cout << "z_pred2: " << z_pred << endl;
   cout << "test2a" << endl;
   cout << "n_aug_" << n_aug_ << endl;
+
+  VectorXd weights = VectorXd(2 * n_aug_ + 1);
+  double weight_0 = lambda_/(lambda_ + n_aug_);
+  weights(0) = weight_0;
+  for (int i=1; i<2*n_aug_ + 1; i++) {  
+  double weight = 0.5/(n_aug_+lambda_);
+  weights(i) = weight;
+ }
+
   for (int i=0; i < 2*n_aug_ + 1; i++) {
       cout << "test loop" << endl;
       cout << "z_pred3: " << z_pred << endl;
       cout << "Zsig" << Zsig.col(i) << endl;
-      cout << "weights" << endl;
-      z_pred = z_pred + weights_(i); //* Zsig.col(i);
+      cout << "weights" << weights << endl;
+      z_pred = z_pred + weights(i) *  Zsig.col(i);
   }
 
   cout << "test3" << endl;
