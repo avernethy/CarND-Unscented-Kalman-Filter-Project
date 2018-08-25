@@ -148,7 +148,7 @@ void UKF::Prediction(double delta_t) {
   int n_aug = 7;
 
   //define spreading parameter
-  double lambda = 3 - n_x;
+  double lambda = 3 - n_aug;
 
   MatrixXd Xsig = MatrixXd(n_x, 2 * n_x + 1);
 
