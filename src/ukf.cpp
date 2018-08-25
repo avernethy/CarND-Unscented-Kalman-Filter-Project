@@ -132,6 +132,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   double weight = 0.5/(n_aug_+lambda_);
   weights_(i) = weight;
  }
+ cout << "weights_ top: " << weights_ << endl;
 
  if (meas_package.sensor_type_ == MeasurementPackage::LASER){
       cout << "In Lidar" << endl;
