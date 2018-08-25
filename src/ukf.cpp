@@ -54,6 +54,13 @@ UKF::UKF() {
 
   Hint: one or more values initialized above might be wildly off...
   */
+ //set state dimension
+  n_x_ = 5;
+
+  //set augmented dimension
+  n_aug_ = 7;
+  //set spreading parameter
+  lambda_ = 3 - n_aug_;
 }
 
 UKF::~UKF() {}
@@ -69,13 +76,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   Complete this function! Make sure you switch between lidar and radar
   measurements.
   */
- //set state dimension
-  n_x_ = 5;
-
-  //set augmented dimension
-  n_aug_ = 7;
-  //set spreading parameter
-  lambda_ = 3 - n_aug_;
+ 
 
  static long long previous_time_stamp;
  double delta_t;
