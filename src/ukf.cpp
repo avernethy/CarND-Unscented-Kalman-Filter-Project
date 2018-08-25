@@ -123,12 +123,12 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
  //cout << "Previous t: " << previous_time_stamp << endl;
  UKF::Prediction(delta_t);
 
- cout << "Lambda: " << lambda << endl;
+ cout << "Lambda: " << lambda_ << endl;
  //set vector for weights
  VectorXd weights_ = VectorXd(2*n_aug_+1);
  double weight_0 = lambda_/(lambda+n_aug_);
  weights_(0) = weight_0;
- for (int i=1; i<2*n_aug__+1; i++) {  
+ for (int i=1; i<2*n_aug_ + 1; i++) {  
   double weight = 0.5/(n_aug_+lambda_);
   weights_(i) = weight;
  }
@@ -188,7 +188,7 @@ void UKF::Prediction(double delta_t) {
   MatrixXd Xsig_aug = MatrixXd(n_aug_, 2 * n_aug_ + 1);
 
   //create augmented mean state
-  x_aug.head(n_x) = x_;
+  x_aug.head(n_x_) = x_;
   x_aug(5) = 0;
   x_aug(6) = 0;
 
@@ -340,7 +340,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   S = S + R;
   //cout << "S: " << S << endl;
   //create matrix for cross correlation Tc
-  MatrixXd Tc = MatrixXd(n_x, n_z);
+  MatrixXd Tc = MatrixXd(n_x_, n_z);
 
   //calculate cross correlation matrix
   Tc.fill(0.0);
@@ -359,7 +359,7 @@ cout << "Entering the while loops" << endl;
     while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
     while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
 cout << "Made it past the while loops" << endl;
-    Tc = Tc + weights(i) * x_diff * z_diff.transpose();
+    Tc = Tc + weights_(i) * x_diff * z_diff.transpose();
   }
 
   //Kalman gain K;
