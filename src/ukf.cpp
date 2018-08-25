@@ -96,7 +96,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
       x_ << measurement_pack.raw_measurements_[0]*cos(measurement_pack.raw_measurements_[3]),
                 measurement_pack.raw_measurements_[0]*sin(measurement_pack.raw_measurements_[3]),
                 0,
-                0;
+                0,
                 0;
     }
 
