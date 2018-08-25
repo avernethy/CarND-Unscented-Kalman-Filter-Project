@@ -140,7 +140,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
       use_radar_ = true;
       UKF::UpdateRadar(meas_package);
  }
-
+cout << "Exit: " << endl;
 }
 
 /**
@@ -223,7 +223,7 @@ void UKF::Prediction(double delta_t) {
       float nu_psi2 = Xsig_aug(6, ii);
 
       VectorXd x = VectorXd(5);
-      x << px, py, v, psi, psi_dot;
+      x_ << px, py, v, psi, psi_dot;
       
       VectorXd term1 = VectorXd(5);
       VectorXd term2 = VectorXd(5);
@@ -251,7 +251,7 @@ void UKF::Prediction(double delta_t) {
       term2(3) = dt2 * nu_psi2;
       term2(4) = delta_t * nu_psi2;
       
-      Xsig_pred_.col(ii) = x + term1 + term2; //Predicted Sigma POints (5 elements from 7)
+      Xsig_pred_.col(ii) = x_ + term1 + term2; //Predicted Sigma POints (5 elements from 7)
       //cout << Xsig_pred_ << "\n" << endl;
   }
 }
@@ -298,16 +298,16 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   }
 
   //predicted state mean
-  VectorXd x_pred = VectorXd(n_x_);
-  x_pred.fill(0.0);
+  //VectorXd x_pred = VectorXd(n_x_);
+  //x_pred.fill(0.0);
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
-    x_pred = x_pred+ weights(i) * Xsig_pred_.col(i);
+    x_ = x_ + weights(i) * Xsig_pred_.col(i);
   }
 
   //create covariance matrix for prediction
-  MatrixXd P_pred = MatrixXd(n_x_, n_x_);
+  //MatrixXd P_pred = MatrixXd(n_x_, n_x_);
   //predicted state covariance matrix
-  P_pred.fill(0.0);
+  //P_pred.fill(0.0);
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
 
     // state difference
@@ -317,7 +317,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
     while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
     while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
     cout <<"Exit while 1" << endl;
-    P_pred = P_pred + weights(i) * x_diff * x_diff.transpose();
+    P_ = P_ + weights(i) * x_diff * x_diff.transpose();
   }
 
   //set measurement dimension, radar can measure r, phi, and r_dot
@@ -413,6 +413,6 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   cout <<"Exit while 4" << endl;
 
   //update state mean and covariance matrix
-  x_ = x_pred + K * z_diff;
-  P_ = P_pred - K*S*K.transpose();
+  x_ = x_ + K * z_diff;
+  P_ = P_ - K*S*K.transpose();
 }
