@@ -128,19 +128,20 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
  //set vector for weights
  
  //cout << "weights_ top: " << weights_ << endl;
-
- /*if (meas_package.sensor_type_ == MeasurementPackage::LASER){
+/*
+ if (meas_package.sensor_type_ == MeasurementPackage::LASER){
       cout << "In Lidar" << endl;
       use_laser_ = true;
       use_radar_ = false;
       //UKF::UpdateLidar(meas_package);
  }
- else if (meas_package.sensor_type_ == MeasurementPackage::RADAR){
+ else*/
+  if (meas_package.sensor_type_ == MeasurementPackage::RADAR){
       cout << "In Radar" << endl;
-      use_laser_ = false;
-      use_radar_ = true;
+      //use_laser_ = false;
+      //use_radar_ = true;
       UKF::UpdateRadar(meas_package);
- }*/
+ }
 cout << "Exit: " << endl;
 cout << "P: " << P_ << endl;
 }
