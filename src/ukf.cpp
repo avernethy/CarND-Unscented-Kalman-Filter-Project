@@ -104,9 +104,11 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
  UKF::Prediction(delta_t);
 
  if (meas_package.sensor_type_ == MeasurementPackage::LASER){
-      UKF::UpdateLidar(meas_package);
+      cout << "In Lidar" << endl;
+      //UKF::UpdateLidar(meas_package);
  }
  else if (meas_package.sensor_type_ == MeasurementPackage::RADAR){
+   cout << "In Radar" << endl;
       UKF::UpdateRadar(meas_package);
  }
 
