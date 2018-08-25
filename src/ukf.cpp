@@ -126,7 +126,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
  cout << "Lambda: " << lambda_ << endl;
  //set vector for weights
  
- cout << "weights_ top: " << weights_ << endl;
+ //cout << "weights_ top: " << weights_ << endl;
 
  if (meas_package.sensor_type_ == MeasurementPackage::LASER){
       cout << "In Lidar" << endl;
@@ -313,9 +313,10 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
     // state difference
     VectorXd x_diff = Xsig_pred_.col(i) - x_pred;
     //angle normalization
+    cout <<"Enter while 1" << endl;
     while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
     while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
-
+    cout <<"Exit while 1" << endl;
     P_pred = P_pred + weights(i) * x_diff * x_diff.transpose();
   }
 
@@ -383,14 +384,18 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
     //residual
     VectorXd z_diff = Zsig.col(i) - z_pred;
     //angle normalization
+    cout <<"Enter while 2" << endl;
     while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
     while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
+    cout <<"Exit while 2" << endl;
 
     // state difference
     VectorXd x_diff = Xsig_pred_.col(i) - x_pred;
     //angle normalization
+    cout <<"Enter while 3" << endl;
     while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
     while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
+    cout <<"Exit while 3" << endl;
 
     Tc = Tc + weights(i) * x_diff * z_diff.transpose();
   }
