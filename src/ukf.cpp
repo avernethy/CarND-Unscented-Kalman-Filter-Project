@@ -74,11 +74,11 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
  if (!is_initialized_) {
    
    cout << "Initializing" << endl;
-   x_ << 5.93637,
-     1.49035,
-     2.20528,
-    0.536853,
-    0.353577;
+   x_ << 0,
+     0,
+     0,
+    0,
+    0;
    P_ << 1, 0, 0, 0, 0, 
         0, 1, 0, 0, 0, 
         0, 0, 1, 0, 0,
@@ -86,18 +86,18 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
         0, 0, 0, 0, 1;
 
     if (meas_package.sensor_type_ == MeasurementPackage::LASER){
-      x_ << 5.93637,
-     1.49035,
-     2.20528,
-    0.536853,
-    0.353577;
+      x_ << 0,
+     0,
+     0,
+    0,
+    0;
     }
     else if (meas_package.sensor_type_ == MeasurementPackage::RADAR){
-      x_ << 5.93637,
-     1.49035,
-     2.20528,
-    0.536853,
-    0.353577;
+      x_ << measurement_pack.raw_measurements_[0]*cos(measurement_pack.raw_measurements_[3]),
+                measurement_pack.raw_measurements_[0]*sin(measurement_pack.raw_measurements_[3]),
+                0,
+                0;
+                0;
     }
 
     //update the previous time stamp
