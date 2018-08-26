@@ -102,8 +102,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
     0;
     }
     else if (meas_package.sensor_type_ == MeasurementPackage::RADAR){
-      x_ << meas_package.raw_measurements_[0]*cos(meas_package.raw_measurements_[1],
-                meas_package.raw_measurements_[0]*sin(meas_package.raw_measurements_[1],
+      x_ << meas_package.raw_measurements_[0]*cos(meas_package.raw_measurements_[1]),
+                meas_package.raw_measurements_[0]*sin(meas_package.raw_measurements_[1]),
                 meas_package.raw_measurements_[2],
                 0,
                 0;
