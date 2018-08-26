@@ -93,8 +93,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
  double delta_t;
  if (!is_initialized_) {
    
-   x_ << 0, 0, 0, 0, 0;
-   P_ << 0.0225, 0, 0, 0, 0, 
+    x_ << 0, 0, 0, 0, 0;
+    P_ << 0.0225, 0, 0, 0, 0, 
         0, 0.0225, 0, 0, 0, 
         0, 0, 0.09, 0, 0,
         0, 0, 0, 0.09, 0,
@@ -202,8 +202,7 @@ void UKF::Prediction(double delta_t) {
  
   //Intialized predicted the sigma points
   Xsig_pred_ = MatrixXd(n_x_, 2 * n_aug_ + 1);
-  
-  
+    
   //predict sigma points
   //avoid division by zero
   for (int ii = 0; ii < 2 * n_aug_ + 1; ii++){
