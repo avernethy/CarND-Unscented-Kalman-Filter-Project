@@ -102,8 +102,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
     0;
     }
     else if (meas_package.sensor_type_ == MeasurementPackage::RADAR){
-      x_ << 0,
-                0,
+      x_ << 10,
+                10,
                 0,
                 0,
                 0;
