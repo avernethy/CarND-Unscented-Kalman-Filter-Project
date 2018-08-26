@@ -319,8 +319,8 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
     double v  = Xsig_pred_(2,i);
     double yaw = Xsig_pred_(3,i);
 
-    double v1 = cos(yaw)*v;
-    double v2 = sin(yaw)*v;
+    //double v1 = cos(yaw)*v;
+    //double v2 = sin(yaw)*v;
 
     // measurement model
     Zsig(0,i) = p_x;//sqrt(p_x*p_x + p_y*p_y);                        //r
@@ -352,9 +352,8 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
 //cout << "S 1: " << S <<endl;
   //add measurement noise covariance matrix
   MatrixXd R = MatrixXd(n_z,n_z);
-  R <<    std_radr_*std_radr_, 0, 0,
-          0, std_radphi_*std_radphi_, 0,
-          0, 0,std_radrd_*std_radrd_;
+  R <<    std_laspx_*std_laspx_, 0,
+          0, std_laspy_*std_laspy_;
   S = S + R;
 
   //create example vector for incoming radar measurement
