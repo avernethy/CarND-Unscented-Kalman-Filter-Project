@@ -167,6 +167,7 @@ void UKF::Prediction(double delta_t) {
   MatrixXd A = P_.llt().matrixL();
   
   //set first column of sigma point matrix
+  cout << "IN x_" << x_ << endl;
   Xsig.col(0)  = x_;
 
   //set remaining sigma points
@@ -179,10 +180,10 @@ void UKF::Prediction(double delta_t) {
   
   
   //create augmented mean vector
-  VectorXd x_aug = VectorXd(7);
+  VectorXd x_aug = VectorXd(n_aug_);
 
   //create augmented state covariance
-  MatrixXd P_aug = MatrixXd(7, 7);
+  MatrixXd P_aug = MatrixXd(n_aug_, n_aug_);
 
   //create sigma point matrix
   MatrixXd Xsig_aug = MatrixXd(n_aug_, 2 * n_aug_ + 1);
@@ -197,7 +198,7 @@ void UKF::Prediction(double delta_t) {
   P_aug.topLeftCorner(n_x_, n_x_) = P_;
   P_aug(5,5) = std_a_ * std_a_;
   P_aug(6,6) = std_yawdd_ * std_yawdd_;
-  //cout << P_aug << "\n" << endl;
+  cout << "P_aug" << P_aug << "\n" << endl;
 
   //create augmented sigma points
   float scale_factor = sqrt(lambda_ + n_aug_);
@@ -257,6 +258,43 @@ void UKF::Prediction(double delta_t) {
       Xsig_pred_.col(ii) = x_ + term1 + term2; //Predicted Sigma POints (5 elements from 7)
       //cout << Xsig_pred_ << "\n" << endl;
   }
+  
+  //Predicted mean and covariance matrices
+  //set vector for weights
+  VectorXd weights = VectorXd(2*n_aug_+1);
+  // set weights
+  double weight_0 = lambda_/(lambda_+n_aug_);
+  weights(0) = weight_0;
+  for (int i=1; i<2*n_aug_+1; i++) {  //2n+1 weights
+    double weight = 0.5/(n_aug_+lambda_);
+    weights(i) = weight;
+  }
+
+  //predicted state mean
+  VectorXd x_pred = VectorXd(n_x_);
+  x_pred.fill(0.0);
+  for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
+    x_pred = x_pred + weights(i) * Xsig_pred_.col(i);
+  }
+  cout << "x check 1: " << x_pred <<endl;
+
+  //create covariance matrix for prediction
+  MatrixXd P_pred = MatrixXd(n_x_, n_x_);
+  //predicted state covariance matrix
+  P_pred.fill(0.0);
+  for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
+    // state difference
+    VectorXd x_diff = Xsig_pred_.col(i) - x_pred;
+    //angle normalization
+    cout <<"Enter while 1" << endl;
+    while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
+    while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
+    cout <<"Exit while 1" << endl;
+    P_pred = P_pred + weights(i) * x_diff * x_diff.transpose();
+  }
+  cout << "P_pred check: " << P_pred <<endl;
+  x_ = x_pred;
+  P_ = P_pred;
 }
 
 /**
@@ -290,39 +328,10 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   */
   //set measurement dimension, radar can measure r, phi, and r_dot
   
-  //set vector for weights
-  VectorXd weights = VectorXd(2*n_aug_+1);
-  // set weights
-  double weight_0 = lambda_/(lambda_+n_aug_);
-  weights(0) = weight_0;
-  for (int i=1; i<2*n_aug_+1; i++) {  //2n+1 weights
-    double weight = 0.5/(n_aug_+lambda_);
-    weights(i) = weight;
-  }
-cout << "Weigth check 1: " << weights <<endl;
-  //predicted state mean
-  //VectorXd x_pred = VectorXd(n_x_);
-  //x_pred.fill(0.0);
-  for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
-    x_ = x_ + weights(i) * Xsig_pred_.col(i);
-  }
-cout << "x check 1: " << x_ <<endl;
-  //create covariance matrix for prediction
-  //MatrixXd P_pred = MatrixXd(n_x_, n_x_);
-  //predicted state covariance matrix
-  //P_pred.fill(0.0);
-  for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
+  
 
-    // state difference
-    VectorXd x_diff = Xsig_pred_.col(i) - x_;
-    //angle normalization
-    cout <<"Enter while 1" << endl;
-    while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
-    while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
-    cout <<"Exit while 1" << endl;
-    P_ = P_ + weights(i) * x_diff * x_diff.transpose();
-  }
-  cout << "Pcheck 1: " << P_ <<endl;
+  
+  
   //set measurement dimension, radar can measure r, phi, and r_dot
   int n_z = 3;
   MatrixXd Zsig = MatrixXd(n_z, 2 * n_aug_ + 1);
