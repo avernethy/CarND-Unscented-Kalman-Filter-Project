@@ -386,21 +386,21 @@ cout << "z : " << z <<endl;
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //2n+1 simga points
 
     //residual
-    //VectorXd z_diff = Zsig.col(i) - z_pred;
+    VectorXd z_diff = Zsig.col(i) - z_pred;
     //angle normalization
-    //cout <<"Enter while 2" << endl;
-    //while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
-    //while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
-    //cout <<"Exit while 2" << endl;
-
+    cout <<"Enter while 2" << endl;
+    while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
+    while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
+    cout <<"Exit while 2" << endl;
+cout << "z_diff : " << z_diff <<endl;
     // state difference
-    //VectorXd x_diff = Xsig_pred_.col(i) - x_;
+    VectorXd x_diff = Xsig_pred_.col(i) - x_;
     //angle normalization
-    //cout <<"Enter while 3" << endl;
-    //while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
-    //while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
-    //cout <<"Exit while 3" << endl;
-
+    cout <<"Enter while 3" << endl;
+    while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
+    while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
+    cout <<"Exit while 3" << endl;
+cout << "x_diff : " << x_diff <<endl;
     Tc = Tc + weights(i) * x_diff * z_diff.transpose();
   }
 cout << "Tc : " << Tc <<endl;
@@ -408,16 +408,16 @@ cout << "Tc : " << Tc <<endl;
   MatrixXd K = Tc * S.inverse();
 cout << "K : " << K <<endl;
   //residual
-  //VectorXd z_diff = z - z_pred;
+  VectorXd z_diff = z - z_pred;
 
   //angle normalization
- // cout <<"Enter while 4" << endl;
-  //while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
- // while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
-  //cout <<"Exit while 4" << endl;
+  cout <<"Enter while 4" << endl;
+  while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
+  while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
+  cout <<"Exit while 4" << endl;
 
   //update state mean and covariance matrix
-  cout << "z_diff : " << z_diff <<endl;
+  cout << "z_diff 4: " << z_diff <<endl;
   cout << "x_ in  : " << x_ <<endl;
   x_ = x_ + K * z_diff;
   cout << "x_ out  : " << x_ <<endl;
