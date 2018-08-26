@@ -344,6 +344,7 @@ cout << "x check 1: " << x_ <<endl;
     Zsig(1,i) = atan2(p_y,p_x);                                 //phi
     Zsig(2,i) = (p_x*v1 + p_y*v2 ) / sqrt(p_x*p_x + p_y*p_y);   //r_dot
   }
+  cout << "Zsig 1: " << Zsig <<endl;
 
   //mean predicted measurement
   VectorXd z_pred = VectorXd(n_z);
@@ -351,7 +352,7 @@ cout << "x check 1: " << x_ <<endl;
   for (int i=0; i < 2*n_aug_+1; i++) {
       z_pred = z_pred + weights(i) * Zsig.col(i);
   }
-
+cout << "z_pred 1: " << z_pred <<endl;
   //innovation covariance matrix S
   MatrixXd S = MatrixXd(n_z,n_z);
   S.fill(0.0);
@@ -365,7 +366,7 @@ cout << "x check 1: " << x_ <<endl;
 
     S = S + weights(i) * z_diff * z_diff.transpose();
   }
-
+cout << "S 1: " << S <<endl;
   //add measurement noise covariance matrix
   MatrixXd R = MatrixXd(n_z,n_z);
   R <<    std_radr_*std_radr_, 0, 0,
@@ -376,7 +377,7 @@ cout << "x check 1: " << x_ <<endl;
   //create example vector for incoming radar measurement
   VectorXd z = VectorXd(n_z);
   z << meas_package.raw_measurements_;
-
+cout << "z : " << z <<endl;
   //create matrix for cross correlation Tc
   MatrixXd Tc = MatrixXd(n_x_, n_z);
 
@@ -385,37 +386,45 @@ cout << "x check 1: " << x_ <<endl;
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //2n+1 simga points
 
     //residual
-    VectorXd z_diff = Zsig.col(i) - z_pred;
+    //VectorXd z_diff = Zsig.col(i) - z_pred;
     //angle normalization
-    cout <<"Enter while 2" << endl;
-    while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
-    while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
-    cout <<"Exit while 2" << endl;
+    //cout <<"Enter while 2" << endl;
+    //while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
+    //while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
+    //cout <<"Exit while 2" << endl;
 
     // state difference
-    VectorXd x_diff = Xsig_pred_.col(i) - x_;
+    //VectorXd x_diff = Xsig_pred_.col(i) - x_;
     //angle normalization
-    cout <<"Enter while 3" << endl;
-    while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
-    while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
-    cout <<"Exit while 3" << endl;
+    //cout <<"Enter while 3" << endl;
+    //while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
+    //while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
+    //cout <<"Exit while 3" << endl;
 
     Tc = Tc + weights(i) * x_diff * z_diff.transpose();
   }
-
+cout << "Tc : " << Tc <<endl;
   //Kalman gain K;
   MatrixXd K = Tc * S.inverse();
-
+cout << "K : " << K <<endl;
   //residual
-  VectorXd z_diff = z - z_pred;
+  //VectorXd z_diff = z - z_pred;
 
   //angle normalization
-  cout <<"Enter while 4" << endl;
-  while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
-  while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
-  cout <<"Exit while 4" << endl;
+ // cout <<"Enter while 4" << endl;
+  //while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
+ // while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
+  //cout <<"Exit while 4" << endl;
 
   //update state mean and covariance matrix
+  cout << "z_diff : " << z_diff <<endl;
+  cout << "x_ in  : " << x_ <<endl;
   x_ = x_ + K * z_diff;
+  cout << "x_ out  : " << x_ <<endl;
+
+  
+  cout << "P_ in  : " << P_ <<endl;
   P_ = P_ - K*S*K.transpose();
+
+  cout << "P_ out  : " << P_ <<endl;
 }
