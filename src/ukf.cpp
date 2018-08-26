@@ -101,8 +101,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
     0;
    P_ << 0.0225, 0, 0, 0, 0, 
         0, 0.0225, 0, 0, 0, 
-        0, 0, 0.0009, 0, 0,
-        0, 0, 0, 0.0009, 0,
+        0, 0, 0.09, 0, 0,
+        0, 0, 0, 0.09, 0,
         0, 0, 0, 0, 0.09;
 
     if (meas_package.sensor_type_ == MeasurementPackage::LASER){
