@@ -93,7 +93,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
  double delta_t;
  if (!is_initialized_) {
    
-   cout << "Initializing" << endl;
+   //cout << "Initializing" << endl;
    x_ << 0,
      0,
      0,
@@ -131,26 +131,26 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
  //cout << "Previous t: " << previous_time_stamp << endl;
  UKF::Prediction(delta_t);
 
- cout << "Lambda: " << lambda_ << endl;
+ //cout << "Lambda: " << lambda_ << endl;
  //set vector for weights
  
- //cout << "weights_ top: " << weights_ << endl;
+ ////cout << "weights_ top: " << weights_ << endl;
 /*
  if (meas_package.sensor_type_ == MeasurementPackage::LASER){
-      cout << "In Lidar" << endl;
+      //cout << "In Lidar" << endl;
       use_laser_ = true;
       use_radar_ = false;
       //UKF::UpdateLidar(meas_package);
  }
  else*/
   if (meas_package.sensor_type_ == MeasurementPackage::RADAR){
-      cout << "In Radar" << endl;
+      //cout << "In Radar" << endl;
       //use_laser_ = false;
       //use_radar_ = true;
       UKF::UpdateRadar(meas_package);
  }
-cout << "Exit: " << endl;
-cout << "P: " << P_ << endl;
+//cout << "Exit: " << endl;
+//cout << "P: " << P_ << endl;
 }
 
 /**
@@ -166,7 +166,7 @@ void UKF::Prediction(double delta_t) {
   vector, x_. Predict sigma points, the state, and the state covariance matrix.
   */
 
-  cout << "In Predict" << endl;
+  //cout << "In Predict" << endl;
   //Generate Sigma Points
   MatrixXd Xsig = MatrixXd(n_x_, 2 * n_x_ + 1);
 
@@ -174,7 +174,7 @@ void UKF::Prediction(double delta_t) {
   MatrixXd A = P_.llt().matrixL();
   
   //set first column of sigma point matrix
-  cout << "IN x_: " << x_ << endl;
+  //cout << "IN x_: " << x_ << endl;
   Xsig.col(0)  = x_;
 
   //set remaining sigma points
@@ -205,7 +205,7 @@ void UKF::Prediction(double delta_t) {
   P_aug.topLeftCorner(n_x_, n_x_) = P_;
   P_aug(5,5) = std_a_ * std_a_;
   P_aug(6,6) = std_yawdd_ * std_yawdd_;
-  cout << "P_aug" << P_aug << "\n" << endl;
+  //cout << "P_aug" << P_aug << "\n" << endl;
 
   //create augmented sigma points
   float scale_factor = sqrt(lambda_ + n_aug_);
@@ -274,7 +274,7 @@ void UKF::Prediction(double delta_t) {
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
     x_pred = x_pred + weights_(i) * Xsig_pred_.col(i);
   }
-  cout << "x check 1: " << x_pred <<endl;
+  //cout << "x check 1: " << x_pred <<endl;
 
   //create covariance matrix for prediction
   MatrixXd P_pred = MatrixXd(n_x_, n_x_);
@@ -284,13 +284,13 @@ void UKF::Prediction(double delta_t) {
     // state difference
     VectorXd x_diff = Xsig_pred_.col(i) - x_pred;
     //angle normalization
-    cout <<"Enter while 1" << endl;
+    //cout <<"Enter while 1" << endl;
     while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
     while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
-    cout <<"Exit while 1" << endl;
+    //cout <<"Exit while 1" << endl;
     P_pred = P_pred + weights_(i) * x_diff * x_diff.transpose();
   }
-  cout << "P_pred check: " << P_pred <<endl;
+  //cout << "P_pred check: " << P_pred <<endl;
   x_ = x_pred;
   P_ = P_pred;
 }
@@ -351,7 +351,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
     Zsig(1,i) = atan2(p_y,p_x);                                 //phi
     Zsig(2,i) = (p_x*v1 + p_y*v2 ) / sqrt(p_x*p_x + p_y*p_y);   //r_dot
   }
-  cout << "Zsig 1: " << Zsig <<endl;
+  //cout << "Zsig 1: " << Zsig <<endl;
 
   //mean predicted measurement
   VectorXd z_pred = VectorXd(n_z);
@@ -359,7 +359,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   for (int i=0; i < 2*n_aug_+1; i++) {
       z_pred = z_pred + weights_(i) * Zsig.col(i);
   }
-cout << "z_pred 1: " << z_pred <<endl;
+//cout << "z_pred 1: " << z_pred <<endl;
   //innovation covariance matrix S
   MatrixXd S = MatrixXd(n_z,n_z);
   S.fill(0.0);
@@ -373,7 +373,7 @@ cout << "z_pred 1: " << z_pred <<endl;
 
     S = S + weights_(i) * z_diff * z_diff.transpose();
   }
-cout << "S 1: " << S <<endl;
+//cout << "S 1: " << S <<endl;
   //add measurement noise covariance matrix
   MatrixXd R = MatrixXd(n_z,n_z);
   R <<    std_radr_*std_radr_, 0, 0,
@@ -384,7 +384,7 @@ cout << "S 1: " << S <<endl;
   //create example vector for incoming radar measurement
   VectorXd z = VectorXd(n_z);
   z << meas_package.raw_measurements_;
-cout << "z : " << z <<endl;
+//cout << "z : " << z <<endl;
   //create matrix for cross correlation Tc
   MatrixXd Tc = MatrixXd(n_x_, n_z);
 
@@ -395,43 +395,43 @@ cout << "z : " << z <<endl;
     //residual
     VectorXd z_diff = Zsig.col(i) - z_pred;
     //angle normalization
-    cout <<"Enter while 2" << endl;
+    //cout <<"Enter while 2" << endl;
     while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
     while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
-    cout <<"Exit while 2" << endl;
-cout << "z_diff : " << z_diff <<endl;
+    //cout <<"Exit while 2" << endl;
+//cout << "z_diff : " << z_diff <<endl;
     // state difference
     VectorXd x_diff = Xsig_pred_.col(i) - x_;
     //angle normalization
-    cout <<"Enter while 3" << endl;
+    //cout <<"Enter while 3" << endl;
     while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
     while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
-    cout <<"Exit while 3" << endl;
-cout << "x_diff : " << x_diff <<endl;
+    //cout <<"Exit while 3" << endl;
+//cout << "x_diff : " << x_diff <<endl;
     Tc = Tc + weights_(i) * x_diff * z_diff.transpose();
   }
-cout << "Tc : " << Tc <<endl;
+//cout << "Tc : " << Tc <<endl;
   //Kalman gain K;
   MatrixXd K = Tc * S.inverse();
-cout << "K : " << K <<endl;
+//cout << "K : " << K <<endl;
   //residual
   VectorXd z_diff = z - z_pred;
 
   //angle normalization
-  cout <<"Enter while 4" << endl;
+  //cout <<"Enter while 4" << endl;
   while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
   while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
-  cout <<"Exit while 4" << endl;
+  //cout <<"Exit while 4" << endl;
 
   //update state mean and covariance matrix
-  cout << "z_diff 4: " << z_diff <<endl;
-  cout << "x_ in  : " << x_ <<endl;
+  //cout << "z_diff 4: " << z_diff <<endl;
+  //cout << "x_ in  : " << x_ <<endl;
   x_ = x_ + K * z_diff;
-  cout << "x_ out  : " << x_ <<endl;
+  //cout << "x_ out  : " << x_ <<endl;
 
   
-  cout << "P_ in  : " << P_ <<endl;
+  //cout << "P_ in  : " << P_ <<endl;
   P_ = P_ - K*S*K.transpose();
 
-  cout << "P_ out  : " << P_ <<endl;
+  //cout << "P_ out  : " << P_ <<endl;
 }
