@@ -25,10 +25,10 @@ UKF::UKF() {
   P_ = MatrixXd(5, 5);
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 15; // <- MODIFY THIS
+  std_a_ = 1; // <- MODIFY THIS
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  std_yawdd_ = 15; // <- MODIFY THIS
+  std_yawdd_ = 2; // <- MODIFY THIS
   
   //DO NOT MODIFY measurement noise values below these are provided by the sensor manufacturer.
   // Laser measurement noise standard deviation position1 in m
@@ -316,8 +316,8 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
     // extract values for better readibility
     double p_x = Xsig_pred_(0,i);
     double p_y = Xsig_pred_(1,i);
-    double v  = Xsig_pred_(2,i);
-    double yaw = Xsig_pred_(3,i);
+    //double v  = Xsig_pred_(2,i);
+    //double yaw = Xsig_pred_(3,i);
 
     //double v1 = cos(yaw)*v;
     //double v2 = sin(yaw)*v;
