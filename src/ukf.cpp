@@ -61,6 +61,17 @@ UKF::UKF() {
   n_aug_ = 7;
   //set spreading parameter
   lambda_ = 3 - n_aug_;
+
+  //set vector for weights
+  weights_ = VectorXd(2*n_aug_+1);
+  // set weights
+  double weight_0 = lambda_/(lambda_+n_aug_);
+  weights_(0) = weight_0;
+  for (int i=1; i<2*n_aug_+1; i++) {  //2n+1 weights
+    double weight = 0.5/(n_aug_+lambda_);
+    weights_(i) = weight;
+  }
+
 }
 
 UKF::~UKF() {}
@@ -260,16 +271,7 @@ void UKF::Prediction(double delta_t) {
   }
   
   //Predicted mean and covariance matrices
-  //set vector for weights
-  VectorXd weights = VectorXd(2*n_aug_+1);
-  // set weights
-  double weight_0 = lambda_/(lambda_+n_aug_);
-  weights(0) = weight_0;
-  for (int i=1; i<2*n_aug_+1; i++) {  //2n+1 weights
-    double weight = 0.5/(n_aug_+lambda_);
-    weights(i) = weight;
-  }
-
+  
   //predicted state mean
   VectorXd x_pred = VectorXd(n_x_);
   x_pred.fill(0.0);
