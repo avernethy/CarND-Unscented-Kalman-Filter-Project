@@ -99,8 +99,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
      0,
     0,
     0;
-   P_ << 0.1, 0, 0, 0, 0, 
-        0, 0.1, 0, 0, 0, 
+   P_ << 0.0225, 0, 0, 0, 0, 
+        0, 0.0225, 0, 0, 0, 
         0, 0, 0.1, 0, 0,
         0, 0, 0, 0.1, 0,
         0, 0, 0, 0, 0.1;
