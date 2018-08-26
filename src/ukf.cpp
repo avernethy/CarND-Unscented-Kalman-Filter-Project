@@ -25,10 +25,10 @@ UKF::UKF() {
   P_ = MatrixXd(5, 5);
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 1; // <- MODIFY THIS
+  std_a_ = 15; // <- MODIFY THIS
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  std_yawdd_ = 1; // <- MODIFY THIS
+  std_yawdd_ = 15; // <- MODIFY THIS
   
   //DO NOT MODIFY measurement noise values below these are provided by the sensor manufacturer.
   // Laser measurement noise standard deviation position1 in m
@@ -99,18 +99,14 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
      0,
     0,
     0;
-   P_ << 1, 0, 0, 0, 0, 
-        0, 1, 0, 0, 0, 
-        0, 0, 1, 0, 0,
-        0, 0, 0, 1, 0,
-        0, 0, 0, 0, 1;
+   P_ << 0.1, 0, 0, 0, 0, 
+        0, 0.1, 0, 0, 0, 
+        0, 0, 0.1, 0, 0,
+        0, 0, 0, 0.1, 0,
+        0, 0, 0, 0, 0.1;
 
     if (meas_package.sensor_type_ == MeasurementPackage::LASER){
-      x_ << 0,
-     0,
-     0,
-    0,
-    0;
+      x_ << measurement_pack.raw_measurements_[0], measurement_pack.raw_measurements_[1], 0, 0;
     }
     else if (meas_package.sensor_type_ == MeasurementPackage::RADAR){
       x_ << meas_package.raw_measurements_[0]*cos(meas_package.raw_measurements_[1]),
@@ -170,7 +166,7 @@ void UKF::Prediction(double delta_t) {
   vector, x_. Predict sigma points, the state, and the state covariance matrix.
   */
 
-  cout << "IN Predict" << endl;
+  cout << "In Predict" << endl;
   //Generate Sigma Points
   MatrixXd Xsig = MatrixXd(n_x_, 2 * n_x_ + 1);
 
@@ -178,7 +174,7 @@ void UKF::Prediction(double delta_t) {
   MatrixXd A = P_.llt().matrixL();
   
   //set first column of sigma point matrix
-  cout << "IN x_" << x_ << endl;
+  cout << "IN x_: " << x_ << endl;
   Xsig.col(0)  = x_;
 
   //set remaining sigma points
