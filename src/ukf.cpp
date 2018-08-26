@@ -276,7 +276,7 @@ void UKF::Prediction(double delta_t) {
   VectorXd x_pred = VectorXd(n_x_);
   x_pred.fill(0.0);
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
-    x_pred = x_pred + weights(i) * Xsig_pred_.col(i);
+    x_pred = x_pred + weights_(i) * Xsig_pred_.col(i);
   }
   cout << "x check 1: " << x_pred <<endl;
 
@@ -292,7 +292,7 @@ void UKF::Prediction(double delta_t) {
     while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
     while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
     cout <<"Exit while 1" << endl;
-    P_pred = P_pred + weights(i) * x_diff * x_diff.transpose();
+    P_pred = P_pred + weights_(i) * x_diff * x_diff.transpose();
   }
   cout << "P_pred check: " << P_pred <<endl;
   x_ = x_pred;
@@ -361,7 +361,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   VectorXd z_pred = VectorXd(n_z);
   z_pred.fill(0.0);
   for (int i=0; i < 2*n_aug_+1; i++) {
-      z_pred = z_pred + weights(i) * Zsig.col(i);
+      z_pred = z_pred + weights_(i) * Zsig.col(i);
   }
 cout << "z_pred 1: " << z_pred <<endl;
   //innovation covariance matrix S
@@ -375,7 +375,7 @@ cout << "z_pred 1: " << z_pred <<endl;
     while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
     while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
 
-    S = S + weights(i) * z_diff * z_diff.transpose();
+    S = S + weights_(i) * z_diff * z_diff.transpose();
   }
 cout << "S 1: " << S <<endl;
   //add measurement noise covariance matrix
@@ -412,7 +412,7 @@ cout << "z_diff : " << z_diff <<endl;
     while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
     cout <<"Exit while 3" << endl;
 cout << "x_diff : " << x_diff <<endl;
-    Tc = Tc + weights(i) * x_diff * z_diff.transpose();
+    Tc = Tc + weights_(i) * x_diff * z_diff.transpose();
   }
 cout << "Tc : " << Tc <<endl;
   //Kalman gain K;
