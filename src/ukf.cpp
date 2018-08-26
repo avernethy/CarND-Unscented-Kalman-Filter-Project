@@ -106,7 +106,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
         0, 0, 0, 0, 0.1;
 
     if (meas_package.sensor_type_ == MeasurementPackage::LASER){
-      x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0, 0;
+      x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0, 0, 0;
     }
     else if (meas_package.sensor_type_ == MeasurementPackage::RADAR){
       x_ << meas_package.raw_measurements_[0]*cos(meas_package.raw_measurements_[1]),
