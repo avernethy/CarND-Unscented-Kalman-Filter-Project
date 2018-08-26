@@ -299,14 +299,14 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
     double weight = 0.5/(n_aug_+lambda_);
     weights(i) = weight;
   }
-
+cout << "Weigth check 1: " << weights <<endl;
   //predicted state mean
   //VectorXd x_pred = VectorXd(n_x_);
   //x_pred.fill(0.0);
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
     x_ = x_ + weights(i) * Xsig_pred_.col(i);
   }
-
+cout << "x check 1: " << x_ <<endl;
   //create covariance matrix for prediction
   //MatrixXd P_pred = MatrixXd(n_x_, n_x_);
   //predicted state covariance matrix
@@ -322,7 +322,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
     cout <<"Exit while 1" << endl;
     P_ = P_ + weights(i) * x_diff * x_diff.transpose();
   }
-
+  cout << "Pcheck 1: " << P_ <<endl;
   //set measurement dimension, radar can measure r, phi, and r_dot
   int n_z = 3;
   MatrixXd Zsig = MatrixXd(n_z, 2 * n_aug_ + 1);
